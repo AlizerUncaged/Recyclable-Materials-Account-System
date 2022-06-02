@@ -1,0 +1,79 @@
+﻿<UserControl x:Class="Recyclable_Materials.Pages.Login"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
+             xmlns:local="clr-namespace:Recyclable_Materials.Pages"
+             mc:Ignorable="d"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid x:Name="loginBanner" Background="white">
+        <Grid x:Name="TopGrid"  Margin="15">
+            <StackPanel Orientation="Horizontal" Height="50" HorizontalAlignment="Left" VerticalAlignment="Top">
+                <Image Source="/Resources/Logo.png" HorizontalAlignment="Left" VerticalAlignment="Center" Height="30" Margin="0,0,5,0"></Image>
+                <Label Content="Recyclable Materials" FontSize="14" FontWeight="Bold" VerticalAlignment="Center"/>
+            </StackPanel>
+        </Grid>
+        <Grid x:Name="CenterGrid" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="50,0,0,0">
+            <StackPanel>
+                <TextBlock Text="ACCOUNT MANAGEMENT SYSTEM" FontSize="16" Opacity="0.5" FontWeight="Bold" Margin="0,0,0,5"/>
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                    <TextBlock Text="Administrator login" FontSize="24" FontWeight="Bold"/>
+                    <TextBlock Text="." FontSize="24" FontWeight="Bold" Foreground="#FF01C482"/>
+                </StackPanel>
+                <StackPanel x:Name="LoginPanel" Width="260">
+                    <TextBox x:Name="emailField" Style="{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="Email" FontSize="14" FontWeight="Bold"></TextBox>
+                    <PasswordBox x:Name="passwordField" Style="{StaticResource MaterialDesignFloatingHintPasswordBox}" materialDesign:HintAssist.Hint="Password" FontSize="14" FontWeight="Bold" Margin="0,0,0,15"></PasswordBox>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button Click="RegisterInstead"  Foreground="White" Margin="0,0,15,0" BorderBrush="{x:Null}" Background="#FF3A574D">
+                          <Button.Content>
+                                    <StackPanel Orientation="Horizontal">
+                                        <materialDesign:PackIcon Kind="Add" VerticalAlignment="Center" Margin="0,0,5,0" />
+                                        <TextBlock VerticalAlignment="Center">Add Administrator</TextBlock>
+                                    </StackPanel>
+                                </Button.Content>
+                            </Button>
+                        <Button Content="Login" Click="LoginClicked" Foreground="White" BorderBrush="{x:Null}" Background="#FF01C482"></Button>
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel x:Name="AdminOptions" Orientation="Horizontal" d:IsHidden="True" Visibility="Collapsed">
+                    <Border x:Name="MemberParent" Width="150" Height="175" BorderThickness="3" BorderBrush="#FF01C482" CornerRadius="10" Cursor="Hand" Margin="0,0,15,0">
+                        <Grid>
+                        <Border Width="150" Height="100" CornerRadius="0,0,10,10" VerticalAlignment="Bottom" Background="#FF01C482">
+                                <Grid>
+                                    <StackPanel Margin="10">
+                                        <TextBlock Text="Members" Foreground="White" FontWeight="Bold" FontSize="16" Margin="0,0,0,5"></TextBlock>
+                                        <TextBlock TextWrapping="Wrap" Text="Quickly edit, modify and manage members." Foreground="White"  FontSize="14"></TextBlock>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                        </Grid>
+                    </Border>
+                    <Border x:Name="TransactionParent" Width="150" Height="175" BorderThickness="3" BorderBrush="#FF01C482" CornerRadius="10" Cursor="Hand" Margin="0,0,15,0">
+                        <Grid>
+                         <Border Width="150" Height="100" CornerRadius="0,0,10,10" VerticalAlignment="Bottom" Background="#FF01C482">
+                                <Grid>
+                                    <StackPanel Margin="10">
+                                        <TextBlock Text="Transactions" Foreground="White" FontWeight="Bold" FontSize="16" Margin="0,0,0,5"/>
+                                        <TextBlock TextWrapping="Wrap" Text="Quickly edit, modify and manage members." Foreground="White"  FontSize="14"/>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                        </Grid>
+                    </Border>
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+        <Grid x:Name="sideBanner">
+            <Image Source="/Recyclable Materials;component/Resources/loginBanner.png" HorizontalAlignment="Right" Stretch="UniformToFill" Width="421.637"/>
+        </Grid>
+        <Grid x:Name="Notifications">
+            <materialDesign:Snackbar 
+                HorizontalAlignment="Stretch" 
+                MessageQueue="{materialDesign:MessageQueue}" 
+                x:Name="InputAlerts" 
+                Grid.Row="1" 
+                Grid.ColumnSpan="2" />
+        </Grid>
+    </Grid>
+</UserControl>
