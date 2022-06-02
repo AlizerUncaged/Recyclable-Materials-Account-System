@@ -21,7 +21,7 @@ namespace Recyclable_Materials.Pages
 
         public AdminOptions()
         {
-            InitializeComponent();
+            InitializeComponent(); RefreshData();
         }
 
         public event EventHandler<IPage> ChangePage;
@@ -29,8 +29,41 @@ namespace Recyclable_Materials.Pages
         private void RegisterInstead(object sender, RoutedEventArgs e) =>
             ChangePage?.Invoke(this, new Register());
 
+        public void RefreshData()
+        {
+            TotalMembers.Text = $"{Database.LocalDatabase.GetTableCount(Database.LocalDatabase.MembersTable)}";
+            TotalMaterials.Text = $"{Database.LocalDatabase.GetTableCount(Database.LocalDatabase.MaterialsTable)}";
+            TotalEarned.Text = $"₱ {Database.LocalDatabase.GetTotalTransactions()}";
+
+            // Get top 3 members.
+            var orderedMembers = Database.LocalDatabase.SelectMembers().OrderByDescending(x => x.Points).ToArray();
+
+            // Hardcoded, TODO.
+            try
+            {
+                // Top 1.
+                top1name.Text = $"{orderedMembers[0].FirstName} {orderedMembers[0].LastName}";
+                top1desc.Text = $"{orderedMembers[0].Points} Points";
+                top1id.Text = $"ID: {orderedMembers[0].ID}";
+                // Top 2.
+                top2name.Text = $"{orderedMembers[1].FirstName} {orderedMembers[1].LastName}";
+                top2desc.Text = $"{orderedMembers[1].Points} Points";
+                top2id.Text = $"ID: {orderedMembers[1].ID}";
+                // Top 3.
+                top3name.Text = $"{orderedMembers[2].FirstName} {orderedMembers[2].LastName}";
+                top3desc.Text = $"{orderedMembers[2].Points} Points";
+                top3id.Text = $"ID: {orderedMembers[2].ID}";
+            }
+            // Ignore any exception, that's probably an index error.
+            catch {
+            
+            }
+        }
+
         private void ChangeContentPage(IPage page, MouseButtonEventArgs ev = null)
         {
+            RefreshData();
+
             // Prevent window from getting dragged on click.
             if (!(ev is null)) ev.Handled = true;
 
@@ -49,6 +82,7 @@ namespace Recyclable_Materials.Pages
                 page.ChangePage += RequestChangePage;
                 ActivePage.Children.Add(page as UserControl);
             }
+
         }
 
         private void RequestChangePage(object sender, IPage e)

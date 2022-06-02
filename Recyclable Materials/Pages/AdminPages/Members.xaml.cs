@@ -71,6 +71,8 @@ namespace Recyclable_Materials.Pages.AdminPages
 
                 ViewTransactionsButton.Visibility = Visibility.Visible;
             }
+            else
+                ViewTransactionsButton.Visibility = Visibility.Collapsed;
         }
 
         private void ViewMemberTransactions(object sender, RoutedEventArgs e)
@@ -85,18 +87,19 @@ namespace Recyclable_Materials.Pages.AdminPages
 
         private async void AddMember(object sender, RoutedEventArgs e)
         {
-            foreach (var tb in DialogHostT.FindVisualChilds<TextBox>())
-                tb.Clear();
-
+            DatabaseCommand.Content = "Add Member";
             await DialogHostT.ShowDialog(DialogHostT.Content);
-
-
         }
 
 
         private void AddMemberDHost(object sender, RoutedEventArgs e)
         {
-            Database.LocalDatabase.InsertMember(address.Text, email.Text, fname.Text, lname.Text);
+            // Change this into something more optimized, TODO.
+            if ((string)DatabaseCommand.Content == "Add Member")
+                Database.LocalDatabase.InsertMember(address.Text, email.Text, fname.Text, lname.Text);
+            else if ((string)DatabaseCommand.Content == "Update Member" && 
+                MembersTable.SelectedItem is Models.Member selectedMember)
+                Database.LocalDatabase.InsertMember(address.Text, email.Text, fname.Text, lname.Text, selectedMember.ID);
             RefreshMembers();
             CancelDHost(sender, e);
         }
@@ -120,5 +123,11 @@ namespace Recyclable_Materials.Pages.AdminPages
 
         private void SearchMembers(object sender, RoutedEventArgs e) =>
             RefreshMembers(SearchQuery.Text);
+
+        private async void UpdateMember(object sender, RoutedEventArgs e)
+        {
+            DatabaseCommand.Content = "Update Member";
+            await DialogHostT.ShowDialog(DialogHostT.Content);
+        }
     }
 }

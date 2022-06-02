@@ -51,17 +51,17 @@
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,15">
                         <StackPanel Opacity="0.5" Margin="0,0,50,0">
                             <TextBlock Text="Total Members" FontSize="14" FontWeight="Bold" Margin="0,0,0,15"></TextBlock>
-                            <TextBlock Text="86" FontSize="20" FontWeight="Bold"></TextBlock>
+                            <TextBlock x:Name="TotalMembers" Text="86" FontSize="20" FontWeight="Bold"></TextBlock>
                         </StackPanel>
                         <Grid Background="Black" Width="1" Margin="0,0,50,0" Opacity="0.1"></Grid>
                         <StackPanel Opacity="0.5" Margin="0,0,50,0">
                             <TextBlock Text="Total Materials" FontSize="14" FontWeight="Bold" Margin="0,0,0,15"/>
-                            <TextBlock Text="86" FontSize="20" FontWeight="Bold"/>
+                            <TextBlock x:Name="TotalMaterials" Text="86" FontSize="20" FontWeight="Bold"/>
                         </StackPanel>
                         <Grid Background="Black" Width="1" Margin="0,0,50,0" Opacity="0.1"/>
                         <StackPanel Opacity="0.5" Margin="0,0,50,0">
                             <TextBlock Text="Earned by Members" FontSize="14" FontWeight="Bold" Margin="0,0,0,15"/>
-                            <TextBlock Text="₱ 900.00" FontSize="20" FontWeight="Bold"/>
+                            <TextBlock x:Name="TotalEarned" Text="₱ 900.00" FontSize="20" FontWeight="Bold"/>
                         </StackPanel>
                     </StackPanel>
                 </StackPanel>
@@ -76,9 +76,9 @@
                         <Border x:Name="NotableMember1" Width="200" Height="75" CornerRadius="7" Margin="0,0,15,0" Background="White">
                             <Grid>
                                 <StackPanel Margin="10" Opacity="0.5">
-                                    <TextBlock Text="Juan Dela Cruz" FontSize="14" FontWeight="Bold" Margin="0,0,0,5" />
-                                    <TextBlock Text="8000 Points, 2000 Materials" FontSize="12" Margin="0,0,0,0" />
-                                    <TextBlock Text="ID: 80192" FontSize="12" Margin="0,0,0,5" />
+                                    <TextBlock x:Name="top1name" Text=" " FontSize="14" FontWeight="Bold" Margin="0,0,0,5" />
+                                    <TextBlock x:Name="top1desc" Text=" " FontSize="12" Margin="0,0,0,0" />
+                                    <TextBlock x:Name="top1id" Text=" " FontSize="12" Margin="0,0,0,5" />
 
                                 </StackPanel>
                             </Grid>
@@ -86,9 +86,9 @@
                         <Border x:Name="NotableMember2" Width="200" Height="75" CornerRadius="7" Margin="0,0,15,0" Background="White">
                             <Grid>
                                 <StackPanel Margin="10" Opacity="0.5">
-                                    <TextBlock Text="Juan Dela Cruz" FontSize="14" FontWeight="Bold" Margin="0,0,0,5" />
-                                    <TextBlock Text="8000 Points, 2000 Materials" FontSize="12" Margin="0,0,0,0" />
-                                    <TextBlock Text="ID: 80192" FontSize="12" Margin="0,0,0,5" />
+                                    <TextBlock x:Name="top2name" Text=" " FontSize="14" FontWeight="Bold" Margin="0,0,0,5" />
+                                    <TextBlock x:Name="top2desc" Text=" " FontSize="12" Margin="0,0,0,0" />
+                                    <TextBlock x:Name="top2id" Text=" " FontSize="12" Margin="0,0,0,5" />
 
                                 </StackPanel>
                             </Grid>
@@ -96,9 +96,9 @@
                         <Border x:Name="NotableMember3" Width="200" Height="75" CornerRadius="7" Margin="0,0,15,0" Background="White">
                             <Grid>
                                 <StackPanel Margin="10" Opacity="0.5">
-                                    <TextBlock Text="Juan Dela Cruz" FontSize="14" FontWeight="Bold" Margin="0,0,0,5" />
-                                    <TextBlock Text="8000 Points, 2000 Materials" FontSize="12" Margin="0,0,0,0" />
-                                    <TextBlock Text="ID: 80192" FontSize="12" Margin="0,0,0,5" />
+                                    <TextBlock x:Name="top3name" Text=" " FontSize="14" FontWeight="Bold" Margin="0,0,0,5" />
+                                    <TextBlock x:Name="top3desc" Text=" " FontSize="12" Margin="0,0,0,0" />
+                                    <TextBlock x:Name="top3id" Text=" " FontSize="12" Margin="0,0,0,5" />
 
                                 </StackPanel>
                             </Grid>
@@ -108,7 +108,7 @@
             </Grid>
         </DockPanel>
         <Grid x:Name="ActivePage" VerticalAlignment="Bottom" Height="380">
-            
+
         </Grid>
     </Grid>
 </UserControl>

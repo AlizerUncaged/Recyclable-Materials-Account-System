@@ -70,20 +70,20 @@ namespace Recyclable_Materials.Database
                  "address TEXT, " +
                  "password TEXT") &&
             CreateTableIfNotExist(MembersTable,
-                "id INTEGER," +
+                "id INTEGER PRIMARY KEY," +
                 "fname TEXT," +
                 "lname TEXT," +
                 "email TEXT," +
                 "address TEXT," +
                 "points INTEGER") &&
             CreateTableIfNotExist(TransactionsTable,
-                "id INTEGER," +
+                "id INTEGER PRIMARY KEY," +
                 "material INTEGER," +
                 "member INTEGER," +
                 "remarks TEXT," +
                 "price REAL") &&
             CreateTableIfNotExist(MaterialsTable,
-                "id INTEGER," +
+                "id INTEGER PRIMARY KEY," +
                 "name TEXT," +
                 "biodegradable INTEGER" /* bool: 0 = false, 1 = true */);
 
@@ -127,6 +127,41 @@ namespace Recyclable_Materials.Database
                 });
 
             return members;
+        }
+
+        public static double GetTotalTransactions()
+        {
+            try
+            {
+                var cmd = new SQLiteCommand(Connection);
+                cmd.CommandText = $"SELECT SUM(price) FROM {TransactionsTable}";
+
+                return Convert.ToInt32(cmd.ExecuteScalar());
+
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[localdatabase] error: {ex}");
+            }
+            return 0;
+
+        }
+
+        public static long GetTableCount(string tableName)
+        {
+            try
+            {
+                var cmd = new SQLiteCommand(Connection);
+                cmd.CommandText = $"SELECT count(*) FROM {tableName}";
+
+                return Convert.ToInt32(cmd.ExecuteScalar());
+
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[localdatabase] error: {ex}");
+            }
+            return 0;
         }
 
         public static T GetElseDefault<T>(SQLiteDataReader reader, string name)
@@ -192,13 +227,17 @@ namespace Recyclable_Materials.Database
             return false;
         }
 
-        public static bool InsertMember(string address, string email, string fname, string lname)
+        public static bool InsertMember(string address, string email, string fname, string lname, long id = -1)
         {
             try
             {
                 var cmd = new SQLiteCommand(Connection);
-                cmd.CommandText = $"INSERT INTO {MembersTable}(id, fname, lname, email, address, points) VALUES(@id,@fname,@lname,@email,@address,@points)";
-                cmd.Parameters.AddWithValue("id", DbRandom.Next());
+                if (id == -1)
+                    cmd.CommandText = $"INSERT OR REPLACE INTO {MembersTable}(id, fname, lname, email, address, points) VALUES(@id,@fname,@lname,@email,@address,@points)";
+                else cmd.CommandText = $"UPDATE {MembersTable} SET fname=@fname, lname=@lname, email=@email, address=@address, points=@points WHERE id=@id";
+
+                id = id == -1 ? DbRandom.Next() : id;
+                cmd.Parameters.AddWithValue("id", id);
                 cmd.Parameters.AddWithValue("email", email);
                 cmd.Parameters.AddWithValue("fname", fname);
                 cmd.Parameters.AddWithValue("lname", lname);
