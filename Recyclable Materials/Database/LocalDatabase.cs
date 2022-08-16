@@ -5,6 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data.SQLite;
 using System.Diagnostics;
+using System.IO;
+using System.Windows;
+using System.Xml;
+using System.Xml.Serialization;
+using Recyclable_Materials.Models;
 
 namespace Recyclable_Materials.Database
 {
@@ -14,6 +19,7 @@ namespace Recyclable_Materials.Database
     public static class LocalDatabase
     {
         private static Random DbRandom = new Random();
+
         /// <summary>
         /// Table consisting of administrator accounts that can manage all other tables.
         /// </summary>
@@ -39,246 +45,63 @@ namespace Recyclable_Materials.Database
 
         public static bool Connect()
         {
-            try
-            {
-                string cs = "Data Source=Database.db";
-                string stm = "SELECT SQLITE_VERSION()";
-
-                Connection = new SQLiteConnection(cs);
-                Connection.Open();
-
-                var cmd = new SQLiteCommand(stm, Connection);
-                string version = cmd.ExecuteScalar().ToString();
-
-                Debug.WriteLine($"[localdatabase] version: {version}");
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"[localdatabase] error: {ex}");
-            }
-
-            return false;
+            if (!Directory.Exists("db"))
+                Directory.CreateDirectory("db");
+            return true;
         }
 
         public static bool InitializeTables() =>
-             CreateTableIfNotExist(AdministratorAccountsTable,
-                 "email TEXT, " +
-                 "fname TEXT, " +
-                 "lname TEXT, " +
-                 "address TEXT, " +
-                 "password TEXT") &&
-            CreateTableIfNotExist(MembersTable,
-                "id INTEGER PRIMARY KEY," +
-                "fname TEXT," +
-                "lname TEXT," +
-                "email TEXT," +
-                "address TEXT," +
-                "points INTEGER") &&
-            CreateTableIfNotExist(TransactionsTable,
-                "id INTEGER PRIMARY KEY," +
-                "material INTEGER," +
-                "member INTEGER," +
-                "remarks TEXT," +
-                "price REAL") &&
-            CreateTableIfNotExist(MaterialsTable,
-                "id INTEGER PRIMARY KEY," +
-                "name TEXT," +
-                "biodegradable INTEGER" /* bool: 0 = false, 1 = true */);
+            CreateTableIfNotExist<AdministratorModel>() &
+            CreateTableIfNotExist<Material>() &
+            CreateTableIfNotExist<Models.Member>() &
+            CreateTableIfNotExist<Transaction>();
 
         public static bool CheckAdministrator(string email, string password)
         {
-            try
-            {
-                var cmd = new SQLiteCommand(Connection);
-                cmd.CommandText = $"SELECT count(*) FROM {AdministratorAccountsTable} WHERE email=@email AND password=@password";
-                cmd.Parameters.AddWithValue("email", email);
-                cmd.Parameters.AddWithValue("password", password);
+            var administrations = ReadTable<AdministratorModel>();
 
-                int count = Convert.ToInt32(cmd.ExecuteScalar());
-                return count >= 1;
-
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"[localdatabase] error: {ex}");
-            }
-            return false;
+            return !(administrations.FirstOrDefault(x =>
+                x.Email.Equals(email, StringComparison.InvariantCultureIgnoreCase) &&
+                x.Password == password) is null);
         }
 
         public static IEnumerable<Models.Member> SelectMembers()
         {
-
-            List<Models.Member> members = new List<Models.Member>();
-
-            SQLiteDataReader rdr = new SQLiteCommand($"SELECT * FROM {MembersTable}",
-                Connection).ExecuteReader();
-
-            while (rdr.Read())
-                members.Add(new Models.Member
-                {
-                    ID = GetElseDefault<long>(rdr, "id"),
-                    Address = GetElseDefault<string>(rdr, "address"),
-                    Email = (string)rdr.GetValue(rdr.GetOrdinal("email")),
-                    FirstName = (string)rdr.GetValue(rdr.GetOrdinal("fname")),
-                    LastName = (string)rdr.GetValue(rdr.GetOrdinal("lname")),
-                    Points = GetElseDefault<long>(rdr, "points"),
-                });
-
-            return members;
+            return ReadTable<Models.Member>();
         }
 
         public static double GetTotalTransactions()
         {
-            try
-            {
-                var cmd = new SQLiteCommand(Connection);
-                cmd.CommandText = $"SELECT SUM(price) FROM {TransactionsTable}";
-
-                return Convert.ToInt32(cmd.ExecuteScalar());
-
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"[localdatabase] error: {ex}");
-            }
-            return 0;
-
+            return ReadTable<Transaction>().Sum(x => x.Price);
         }
 
-        public static long GetTableCount(string tableName)
+        public static long GetTableCount<T>()
         {
-            try
-            {
-                var cmd = new SQLiteCommand(Connection);
-                cmd.CommandText = $"SELECT count(*) FROM {tableName}";
-
-                return Convert.ToInt32(cmd.ExecuteScalar());
-
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"[localdatabase] error: {ex}");
-            }
-            return 0;
-        }
-
-        public static T GetElseDefault<T>(SQLiteDataReader reader, string name)
-        {
-            var objVal = reader.GetValue(reader.GetOrdinal(name));
-            if (objVal is null)
-                return default(T);
-            try
-            {
-                return (T)objVal;
-            }
-            catch { }
-
-            return default(T);
+            return ReadTable<T>().Count;
         }
 
         public static bool InsertTransaction(long materialId, long memberId, string remarks, string price)
         {
             try
             {
-                var cmd = new SQLiteCommand(Connection);
-                cmd.CommandText = $"INSERT INTO {TransactionsTable}(id, material, member, remarks, price) " +
-                    $"VALUES(@id,@material,@member,@remarks,@price)";
+                var currentTable = ReadTable<Transaction>();
 
-                cmd.Parameters.AddWithValue("id", DbRandom.Next());
-                cmd.Parameters.AddWithValue("material", materialId);
-                cmd.Parameters.AddWithValue("member", memberId);
-                cmd.Parameters.AddWithValue("remarks", remarks);
-                cmd.Parameters.AddWithValue("price", price);
-
-                // Start points at 0.
-                cmd.Parameters.AddWithValue("points", 0);
-
-                cmd.Prepare();
-                cmd.ExecuteNonQuery();
-                cmd.Dispose();
+                currentTable.Add(new Transaction()
+                {
+                    ID = currentTable.Count, Material = materialId, Member = memberId, Remarks = remarks, Price = double.Parse(price)
+                });
+                WriteTable(currentTable);
                 return true;
             }
             catch (Exception ex)
             {
                 Debug.WriteLine($"[localdatabase] error: {ex}");
             }
+
             return false;
         }
 
-        public static bool DeleteMember(long id)
-        {
-            try
-            {
-                var cmd = new SQLiteCommand(Connection);
-                cmd.CommandText = $"DELETE FROM {MembersTable} WHERE id=@id";
-                cmd.Parameters.AddWithValue("id", id);
-
-                cmd.Prepare();
-                cmd.ExecuteNonQuery();
-                cmd.Dispose();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"[localdatabase] error: {ex}");
-            }
-            return false;
-        }
-
-        public static bool InsertMember(string address, string email, string fname, string lname, long id = -1)
-        {
-            try
-            {
-                var cmd = new SQLiteCommand(Connection);
-                if (id == -1)
-                    cmd.CommandText = $"INSERT OR REPLACE INTO {MembersTable}(id, fname, lname, email, address, points) VALUES(@id,@fname,@lname,@email,@address,@points)";
-                else cmd.CommandText = $"UPDATE {MembersTable} SET fname=@fname, lname=@lname, email=@email, address=@address, points=@points WHERE id=@id";
-
-                id = id == -1 ? DbRandom.Next() : id;
-                cmd.Parameters.AddWithValue("id", id);
-                cmd.Parameters.AddWithValue("email", email);
-                cmd.Parameters.AddWithValue("fname", fname);
-                cmd.Parameters.AddWithValue("lname", lname);
-                cmd.Parameters.AddWithValue("address", address);
-
-                // Start points at 0.
-                cmd.Parameters.AddWithValue("points", 0);
-
-                cmd.Prepare();
-                cmd.ExecuteNonQuery();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"[localdatabase] error: {ex}");
-            }
-            return false;
-        }
-
-        public static bool InsertAdministrators(string email, string fname, string lname, string address, string password)
-        {
-            try
-            {
-                var cmd = new SQLiteCommand(Connection);
-                cmd.CommandText = $"INSERT INTO {AdministratorAccountsTable}(email, fname, lname, address, password) VALUES(@email,@fname,@lname,@address,@password)";
-                cmd.Parameters.AddWithValue("email", email);
-                cmd.Parameters.AddWithValue("fname", fname);
-                cmd.Parameters.AddWithValue("lname", lname);
-                cmd.Parameters.AddWithValue("address", address);
-                cmd.Parameters.AddWithValue("password", password);
-
-                cmd.Prepare();
-                cmd.ExecuteNonQuery();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"[localdatabase] error: {ex}");
-            }
-            return false;
-        }
+       
         public static bool Execute(string command)
         {
             try
@@ -298,9 +121,59 @@ namespace Recyclable_Materials.Database
             return false;
         }
 
-        public static bool CreateTableIfNotExist(string tableName, string typeAndNames) =>
-            Execute($"CREATE TABLE IF NOT EXISTS {tableName}({typeAndNames})");
+        public static bool CreateTableIfNotExist<T>()
+        {
+            var tType = typeof(List<T>);
+            string tableName = typeof(T).FullName;
+            var databaseName = $"db/{tableName}.xml";
 
+            if (File.Exists(databaseName)) return true;
 
+            var serializer = new XmlSerializer(tType);
+            using (var writer = XmlWriter.Create(databaseName, new XmlWriterSettings()
+                   {
+                       Encoding = new UTF8Encoding(false), Indent = true
+                   }))
+            {
+                serializer.Serialize(writer, new List<T>());
+            }
+
+            return true;
+        }
+
+        public static bool WriteTable<T>(IEnumerable<T> contents)
+        {
+            var tType = typeof(List<T>);
+            string tableName = typeof(T).FullName;
+            var databaseName = $"db/{tableName}.xml";
+
+            var serializer = new XmlSerializer(tType);
+            StringBuilder result = new StringBuilder();
+            using (var writer = XmlWriter.Create(result, new XmlWriterSettings()
+                   {
+                       Encoding = new UTF8Encoding(false), Indent = true
+                   }))
+            {
+                serializer.Serialize(writer, contents);
+            }
+
+            File.WriteAllText(databaseName, result.Replace("utf-16", "utf-8").ToString());
+
+            return true;
+        }
+
+        public static List<T> ReadTable<T>()
+        {
+            var tType = typeof(List<T>);
+            string tableName = typeof(T).FullName;
+            var databaseName = $"db/{tableName}.xml";
+            var serializer = new XmlSerializer(tType);
+            using (var reader = XmlReader.Create(databaseName, new XmlReaderSettings()
+                   {
+                   }))
+            {
+                return (List<T>)serializer.Deserialize(reader);
+            }
+        }
     }
 }

@@ -16,6 +16,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Recyclable_Materials.Models;
 using Recyclable_Materials.Utilities;
 
 namespace Recyclable_Materials.Pages.AdminPages
@@ -25,13 +26,13 @@ namespace Recyclable_Materials.Pages.AdminPages
     /// </summary>
     public partial class Members : UserControl, IPage
     {
-
         public Members()
         {
             InitializeComponent();
 
             RefreshMembers();
         }
+
         private void ResetFields()
         {
             FirstName.Text = "Select";
@@ -42,6 +43,7 @@ namespace Recyclable_Materials.Pages.AdminPages
             Address.Text = string.Empty;
             Points.Text = string.Empty;
         }
+
         private void RefreshMembers(string query = null)
         {
             ResetFields();
@@ -61,7 +63,8 @@ namespace Recyclable_Materials.Pages.AdminPages
             // We can use bindings for these but that would take a while to set up.
             if (MembersTable.SelectedItem is Models.Member selectedMember)
             {
-                Debug.WriteLine($"[members] selected table item changed selected first name: {selectedMember.FirstName}");
+                Debug.WriteLine(
+                    $"[members] selected table item changed selected first name: {selectedMember.FirstName}");
 
                 FirstName.Text = selectedMember.FirstName;
                 LastName.Text = selectedMember.LastName;
@@ -80,7 +83,7 @@ namespace Recyclable_Materials.Pages.AdminPages
             Transactions transactions = new Transactions();
 
             if (MembersTable.SelectedItem is Models.Member selectedMember)
-                transactions.AccountID = selectedMember.ID;
+                transactions.AccountID = selectedMember.Id;
 
             ChangePage?.Invoke(this, transactions);
         }
@@ -96,10 +99,26 @@ namespace Recyclable_Materials.Pages.AdminPages
         {
             // Change this into something more optimized, TODO.
             if ((string)DatabaseCommand.Content == "Add Member")
-                Database.LocalDatabase.InsertMember(address.Text, email.Text, fname.Text, lname.Text);
-            else if ((string)DatabaseCommand.Content == "Update Member" && 
-                MembersTable.SelectedItem is Models.Member selectedMember)
-                Database.LocalDatabase.InsertMember(address.Text, email.Text, fname.Text, lname.Text, selectedMember.ID);
+            {
+                var member = new Member()
+                {
+                    Address = address.Text, Email = email.Text, FirstName = fname.Text, LastName = lname.Text
+                };
+
+                member.Update(new[] { member });
+            }
+            else if ((string)DatabaseCommand.Content == "Update Member" &&
+                     MembersTable.SelectedItem is Models.Member selectedMember)
+            {
+                var member = new Member()
+                {
+                    Address = address.Text, Email = email.Text, FirstName = fname.Text, LastName = lname.Text,
+                    Id = selectedMember.Id
+                };
+                
+                member.Update(new[] { member });
+            }
+
             RefreshMembers();
             CancelDHost(sender, e);
         }
@@ -114,8 +133,8 @@ namespace Recyclable_Materials.Pages.AdminPages
         {
             if (MembersTable.SelectedItem is Models.Member selectedMember)
             {
-                Debug.WriteLine($"[members] deleting: {selectedMember.FirstName} with id: {selectedMember.ID}");
-                Database.LocalDatabase.DeleteMember(selectedMember.ID);
+                Debug.WriteLine($"[members] deleting: {selectedMember.FirstName} with id: {selectedMember.Id}");
+                selectedMember.Delete(selectedMember);
             }
 
             RefreshMembers();

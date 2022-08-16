@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Recyclable_Materials.Models;
 using Recyclable_Materials.Utilities;
 
 namespace Recyclable_Materials.Pages
@@ -37,9 +38,11 @@ namespace Recyclable_Materials.Pages
         /// <summary>
         /// Checks if all fields have been modified and inputted.
         /// </summary>
-        public bool AllFieldsValid => (bool)TrustCb.IsChecked ?
+        public bool AllFieldsValid => (bool)TrustCb.IsChecked
+            ?
             // Make sure all textboxes have inputs.
-            this.FindVisualChilds<TextBox>().All(x => !string.IsNullOrWhiteSpace(x.Text)) : false;
+            this.FindVisualChilds<TextBox>().All(x => !string.IsNullOrWhiteSpace(x.Text))
+            : false;
 
         /// <summary>
         /// Gets called whenever the register button is clicked.
@@ -52,7 +55,17 @@ namespace Recyclable_Materials.Pages
                 return;
             }
 
-            Database.LocalDatabase.InsertAdministrators(email.Text, fname.Text, lnam.Text, address.Text, password.Password);
+            var administrator = new AdministratorModel()
+            {
+                Email = email.Text, FirstName = fname.Text, LastName = lnam.Text, Address = address.Text,
+                Password = password.Password
+            };
+
+            administrator.Update(new[]
+            {
+                administrator
+            });
+
 
             await DialogHost.ShowDialog(DialogHost.Content);
         }

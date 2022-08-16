@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Recyclable_Materials.Models;
 
 namespace Recyclable_Materials.Pages
 {
@@ -31,8 +32,8 @@ namespace Recyclable_Materials.Pages
 
         public void RefreshData()
         {
-            TotalMembers.Text = $"{Database.LocalDatabase.GetTableCount(Database.LocalDatabase.MembersTable)}";
-            TotalMaterials.Text = $"{Database.LocalDatabase.GetTableCount(Database.LocalDatabase.MaterialsTable)}";
+            TotalMembers.Text = $"{Database.LocalDatabase.GetTableCount<Member>()}";
+            TotalMaterials.Text = $"{Database.LocalDatabase.GetTableCount<Material>()}";
             TotalEarned.Text = $"₱ {Database.LocalDatabase.GetTotalTransactions()}";
 
             // Get top 3 members.
@@ -44,15 +45,15 @@ namespace Recyclable_Materials.Pages
                 // Top 1.
                 top1name.Text = $"{orderedMembers[0].FirstName} {orderedMembers[0].LastName}";
                 top1desc.Text = $"{orderedMembers[0].Points} Points";
-                top1id.Text = $"ID: {orderedMembers[0].ID}";
+                top1id.Text = $"ID: {orderedMembers[0].Id}";
                 // Top 2.
                 top2name.Text = $"{orderedMembers[1].FirstName} {orderedMembers[1].LastName}";
                 top2desc.Text = $"{orderedMembers[1].Points} Points";
-                top2id.Text = $"ID: {orderedMembers[1].ID}";
+                top2id.Text = $"ID: {orderedMembers[1].Id}";
                 // Top 3.
                 top3name.Text = $"{orderedMembers[2].FirstName} {orderedMembers[2].LastName}";
                 top3desc.Text = $"{orderedMembers[2].Points} Points";
-                top3id.Text = $"ID: {orderedMembers[2].ID}";
+                top3id.Text = $"ID: {orderedMembers[2].Id}";
             }
             // Ignore any exception, that's probably an index error.
             catch {

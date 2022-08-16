@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Recyclable_Materials.Models
 {
-    public struct Transaction
+    public class Transaction
     {
         public long ID { get; set; }
 
@@ -21,6 +21,12 @@ namespace Recyclable_Materials.Models
         public long Member { get; set; }
 
         public string Remarks { get; set; }
+
+        public int Quantity { get; set; }
+
+        // Automatically calculated property.
+        public double TotalPrice => Quantity * Price;
+
         public double Price { get; set; }
     }
 }
