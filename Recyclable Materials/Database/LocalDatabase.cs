@@ -14,6 +14,7 @@ namespace Recyclable_Materials.Database
     public static class LocalDatabase
     {
         private static Random DbRandom = new Random();
+
         /// <summary>
         /// Table consisting of administrator accounts that can manage all other tables.
         /// </summary>
@@ -63,12 +64,12 @@ namespace Recyclable_Materials.Database
         }
 
         public static bool InitializeTables() =>
-             CreateTableIfNotExist(AdministratorAccountsTable,
-                 "email TEXT, " +
-                 "fname TEXT, " +
-                 "lname TEXT, " +
-                 "address TEXT, " +
-                 "password TEXT") &&
+            CreateTableIfNotExist(AdministratorAccountsTable,
+                "email TEXT, " +
+                "fname TEXT, " +
+                "lname TEXT, " +
+                "address TEXT, " +
+                "password TEXT") &&
             CreateTableIfNotExist(MembersTable,
                 "id INTEGER PRIMARY KEY," +
                 "fname TEXT," +
@@ -92,24 +93,24 @@ namespace Recyclable_Materials.Database
             try
             {
                 var cmd = new SQLiteCommand(Connection);
-                cmd.CommandText = $"SELECT count(*) FROM {AdministratorAccountsTable} WHERE email=@email AND password=@password";
-                cmd.Parameters.AddWithValue("email", email);
+                cmd.CommandText =
+                    $"SELECT count(*) FROM {AdministratorAccountsTable} WHERE fname=@fname AND password=@password";
+                cmd.Parameters.AddWithValue("fname", email);
                 cmd.Parameters.AddWithValue("password", password);
 
                 int count = Convert.ToInt32(cmd.ExecuteScalar());
                 return count >= 1;
-
             }
             catch (Exception ex)
             {
                 Debug.WriteLine($"[localdatabase] error: {ex}");
             }
+
             return false;
         }
 
         public static IEnumerable<Models.Member> SelectMembers()
         {
-
             List<Models.Member> members = new List<Models.Member>();
 
             SQLiteDataReader rdr = new SQLiteCommand($"SELECT * FROM {MembersTable}",
@@ -137,14 +138,13 @@ namespace Recyclable_Materials.Database
                 cmd.CommandText = $"SELECT SUM(price) FROM {TransactionsTable}";
 
                 return Convert.ToInt32(cmd.ExecuteScalar());
-
             }
             catch (Exception ex)
             {
                 Debug.WriteLine($"[localdatabase] error: {ex}");
             }
-            return 0;
 
+            return 0;
         }
 
         public static long GetTableCount(string tableName)
@@ -155,12 +155,12 @@ namespace Recyclable_Materials.Database
                 cmd.CommandText = $"SELECT count(*) FROM {tableName}";
 
                 return Convert.ToInt32(cmd.ExecuteScalar());
-
             }
             catch (Exception ex)
             {
                 Debug.WriteLine($"[localdatabase] error: {ex}");
             }
+
             return 0;
         }
 
@@ -173,7 +173,9 @@ namespace Recyclable_Materials.Database
             {
                 return (T)objVal;
             }
-            catch { }
+            catch
+            {
+            }
 
             return default(T);
         }
@@ -184,7 +186,7 @@ namespace Recyclable_Materials.Database
             {
                 var cmd = new SQLiteCommand(Connection);
                 cmd.CommandText = $"INSERT INTO {TransactionsTable}(id, material, member, remarks, price) " +
-                    $"VALUES(@id,@material,@member,@remarks,@price)";
+                                  $"VALUES(@id,@material,@member,@remarks,@price)";
 
                 cmd.Parameters.AddWithValue("id", DbRandom.Next());
                 cmd.Parameters.AddWithValue("material", materialId);
@@ -204,6 +206,7 @@ namespace Recyclable_Materials.Database
             {
                 Debug.WriteLine($"[localdatabase] error: {ex}");
             }
+
             return false;
         }
 
@@ -224,6 +227,7 @@ namespace Recyclable_Materials.Database
             {
                 Debug.WriteLine($"[localdatabase] error: {ex}");
             }
+
             return false;
         }
 
@@ -233,8 +237,11 @@ namespace Recyclable_Materials.Database
             {
                 var cmd = new SQLiteCommand(Connection);
                 if (id == -1)
-                    cmd.CommandText = $"INSERT OR REPLACE INTO {MembersTable}(id, fname, lname, email, address, points) VALUES(@id,@fname,@lname,@email,@address,@points)";
-                else cmd.CommandText = $"UPDATE {MembersTable} SET fname=@fname, lname=@lname, email=@email, address=@address, points=@points WHERE id=@id";
+                    cmd.CommandText =
+                        $"INSERT OR REPLACE INTO {MembersTable}(id, fname, lname, email, address, points) VALUES(@id,@fname,@lname,@email,@address,@points)";
+                else
+                    cmd.CommandText =
+                        $"UPDATE {MembersTable} SET fname=@fname, lname=@lname, email=@email, address=@address, points=@points WHERE id=@id";
 
                 id = id == -1 ? DbRandom.Next() : id;
                 cmd.Parameters.AddWithValue("id", id);
@@ -254,19 +261,19 @@ namespace Recyclable_Materials.Database
             {
                 Debug.WriteLine($"[localdatabase] error: {ex}");
             }
+
             return false;
         }
 
-        public static bool InsertAdministrators(string email, string fname, string lname, string address, string password)
+        public static bool InsertAdministrators(string email, string username, string password)
         {
             try
             {
                 var cmd = new SQLiteCommand(Connection);
-                cmd.CommandText = $"INSERT INTO {AdministratorAccountsTable}(email, fname, lname, address, password) VALUES(@email,@fname,@lname,@address,@password)";
+                cmd.CommandText =
+                    $"INSERT INTO {AdministratorAccountsTable}(email, fname, password) VALUES(@email,@username,@password)";
                 cmd.Parameters.AddWithValue("email", email);
-                cmd.Parameters.AddWithValue("fname", fname);
-                cmd.Parameters.AddWithValue("lname", lname);
-                cmd.Parameters.AddWithValue("address", address);
+                cmd.Parameters.AddWithValue("username", username);
                 cmd.Parameters.AddWithValue("password", password);
 
                 cmd.Prepare();
@@ -277,8 +284,10 @@ namespace Recyclable_Materials.Database
             {
                 Debug.WriteLine($"[localdatabase] error: {ex}");
             }
+
             return false;
         }
+
         public static bool Execute(string command)
         {
             try
@@ -300,7 +309,5 @@ namespace Recyclable_Materials.Database
 
         public static bool CreateTableIfNotExist(string tableName, string typeAndNames) =>
             Execute($"CREATE TABLE IF NOT EXISTS {tableName}({typeAndNames})");
-
-
     }
 }

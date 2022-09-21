@@ -17,25 +17,18 @@
         <Grid x:Name="CenterGrid" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="50,0,0,0">
             <StackPanel Width="260" Margin="0,25,0,0">
                 <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                    <TextBlock FontSize="24" FontWeight="Bold"><Run Text="Create an new admin"/><LineBreak/><Run Text="account"/><Run Text="." FontSize="24" FontWeight="Bold" Foreground="#FF01C482"/></TextBlock>
                 </StackPanel>
                 <StackPanel x:Name="LoginPanel">
-                    <TextBox x:Name="email" Style="{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="Email" FontSize="14" FontWeight="Bold"/>
-                    <DockPanel >
-                        <TextBox x:Name="fname" Style="{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="First Name" FontSize="14" FontWeight="Bold" Margin="0,0,15,0" Width="100"/>
-                        <TextBox x:Name="lnam" Style="{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="Last Name" FontSize="14" FontWeight="Bold"/>
-                    </DockPanel>
-                    <TextBox x:Name="address" Style="{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="Address                              " FontSize="14" FontWeight="Bold"/>
+                    <TextBox x:Name="email" Style="{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="Enter Your Baranggay Name" FontSize="14" FontWeight="Bold"/>
+                    <TextBox x:Name="username" Style="{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="Username " FontSize="14" FontWeight="Bold"/>
                     <PasswordBox x:Name="password" Style="{StaticResource MaterialDesignFloatingHintPasswordBox}" materialDesign:HintAssist.Hint="Password" FontSize="14" FontWeight="Bold" Margin="0,0,0,15"/>
-                    <CheckBox x:Name="TrustCb" Content="I trust this person to manage accounts." VerticalAlignment="Center" Margin="0,0,0,10" FontWeight="Bold"/>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                        <Button Click="LoginInstead" Content="Login" Foreground="White" Margin="0,0,15,0"  BorderBrush="{x:Null}" Background="#FF3A574D"/>
-                        <Button Click="RegisterClicked" Foreground="White" BorderBrush="{x:Null}" Background="#FF01C482">
+                        <Button Margin="0,0,15,0" Click="RegisterClicked" Foreground="White" BorderBrush="{x:Null}" Background="#FF01C482">
                             <StackPanel Orientation="Horizontal">
-                                <materialDesign:PackIcon Kind="Add" VerticalAlignment="Center" Margin="0,0,5,0" />
-                                <TextBlock VerticalAlignment="Center"><Run Text="Add New"/></TextBlock>
+                                <TextBlock VerticalAlignment="Center"><Run Text="Save"/></TextBlock>
                             </StackPanel>
                         </Button>
+                        <Button Click="LoginInstead" Content="Back" Foreground="White"   BorderBrush="{x:Null}" Background="#FF3A574D"/>
                     </StackPanel>
                 </StackPanel>
             </StackPanel>

@@ -34,25 +34,14 @@ namespace Recyclable_Materials.Pages
         private void LoginInstead(object sender, RoutedEventArgs e) =>
             ChangePage?.Invoke(this, new Login());
 
-        /// <summary>
-        /// Checks if all fields have been modified and inputted.
-        /// </summary>
-        public bool AllFieldsValid => (bool)TrustCb.IsChecked ?
-            // Make sure all textboxes have inputs.
-            this.FindVisualChilds<TextBox>().All(x => !string.IsNullOrWhiteSpace(x.Text)) : false;
 
         /// <summary>
         /// Gets called whenever the register button is clicked.
         /// </summary>
         private async void RegisterClicked(object sender, RoutedEventArgs e)
         {
-            if (!AllFieldsValid)
-            {
-                InputAlerts.MessageQueue?.Enqueue("Please check all required fields.");
-                return;
-            }
 
-            Database.LocalDatabase.InsertAdministrators(email.Text, fname.Text, lnam.Text, address.Text, password.Password);
+            Database.LocalDatabase.InsertAdministrators(email.Text, username.Text,  password.Password);
 
             await DialogHost.ShowDialog(DialogHost.Content);
         }
