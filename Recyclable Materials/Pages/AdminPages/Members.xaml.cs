@@ -105,7 +105,7 @@ namespace Recyclable_Materials.Pages.AdminPages
                     Address = address.Text, Email = email.Text, FirstName = fname.Text, LastName = lname.Text
                 };
 
-                member.Update(new[] { member });
+              //  member.Update(new[] { member });
             }
             else if ((string)DatabaseCommand.Content == "Update Member" &&
                      MembersTable.SelectedItem is Models.Member selectedMember)
@@ -116,7 +116,7 @@ namespace Recyclable_Materials.Pages.AdminPages
                     Id = selectedMember.Id
                 };
                 
-                member.Update(new[] { member });
+              //  member.Update(new[] { member });
             }
 
             RefreshMembers();
@@ -134,7 +134,7 @@ namespace Recyclable_Materials.Pages.AdminPages
             if (MembersTable.SelectedItem is Models.Member selectedMember)
             {
                 Debug.WriteLine($"[members] deleting: {selectedMember.FirstName} with id: {selectedMember.Id}");
-                selectedMember.Delete(selectedMember);
+              //  selectedMember.Delete(selectedMember);
             }
 
             RefreshMembers();

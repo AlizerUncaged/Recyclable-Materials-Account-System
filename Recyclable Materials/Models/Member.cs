@@ -7,7 +7,7 @@ using Recyclable_Materials.Database;
 
 namespace Recyclable_Materials.Models
 {
-    public class Member : IModel<Member> , ICrudService<Member>
+    public class Member : IModel<Member>
     {
         /// <summary>
         /// Server generated member ID, for security purposes it's randomly generated.
@@ -29,32 +29,5 @@ namespace Recyclable_Materials.Models
 
 
       
-        public void Create() =>
-            LocalDatabase.CreateTableIfNotExist<Member>();
-
-
-        public IEnumerable<Member> Read() =>
-            LocalDatabase.ReadTable<Member>();
-
-        public void Update(IEnumerable<Member> contents)
-        {
-            var currentTable = LocalDatabase.ReadTable<Member>();
-            foreach (var content in contents)
-            {
-                currentTable.RemoveAll(x => x.Id == content.Id);
-                content.Id = currentTable.Count;
-                currentTable.Add(content);
-            }
-
-            LocalDatabase.WriteTable(currentTable);
-        }
-
-        public void Delete(Member obj)
-        {
-            var currentTable = LocalDatabase.ReadTable<Member>();
-            currentTable.RemoveAll(x => x.Id == obj.Id);
-
-            LocalDatabase.WriteTable(currentTable);
-        }
     }
 }
