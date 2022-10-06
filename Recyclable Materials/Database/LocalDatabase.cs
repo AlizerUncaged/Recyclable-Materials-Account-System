@@ -119,7 +119,7 @@ namespace Recyclable_Materials.Database
             while (rdr.Read())
                 members.Add(new Models.Member
                 {
-                    ID = GetElseDefault<long>(rdr, "id"),
+                    Id = GetElseDefault<int>(rdr, "id"),
                     Address = GetElseDefault<string>(rdr, "address"),
                     Email = (string)rdr.GetValue(rdr.GetOrdinal("email")),
                     FirstName = (string)rdr.GetValue(rdr.GetOrdinal("fname")),
@@ -230,7 +230,6 @@ namespace Recyclable_Materials.Database
 
             return false;
         }
-
         public static bool InsertMember(string address, string email, string fname, string lname, long id = -1)
         {
             try
