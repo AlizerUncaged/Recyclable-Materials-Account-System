@@ -230,7 +230,6 @@ namespace Recyclable_Materials.Database
 
             return false;
         }
-
         public static bool InsertMember(string address, string email, string fname, string lname, long id = -1)
         {
             try

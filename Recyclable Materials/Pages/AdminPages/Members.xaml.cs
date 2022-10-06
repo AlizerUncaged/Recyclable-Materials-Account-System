@@ -97,32 +97,14 @@ namespace Recyclable_Materials.Pages.AdminPages
 
         private void AddMemberDHost(object sender, RoutedEventArgs e)
         {
-            // Change this into something more optimized, TODO.
             if ((string)DatabaseCommand.Content == "Add Member")
-            {
-                var member = new Member()
-                {
-                    Address = address.Text, Email = email.Text, FirstName = fname.Text, LastName = lname.Text
-                };
-
-              //  member.Update(new[] { member });
-            }
-            else if ((string)DatabaseCommand.Content == "Update Member" &&
+                Database.LocalDatabase.InsertMember(address.Text, email.Text, fname.Text, lname.Text);
+            else if ((string)DatabaseCommand.Content == "Update Member" && 
                      MembersTable.SelectedItem is Models.Member selectedMember)
-            {
-                var member = new Member()
-                {
-                    Address = address.Text, Email = email.Text, FirstName = fname.Text, LastName = lname.Text,
-                    Id = selectedMember.Id
-                };
-                
-              //  member.Update(new[] { member });
-            }
-
+                Database.LocalDatabase.InsertMember(address.Text, email.Text, fname.Text, lname.Text, selectedMember.Id);
             RefreshMembers();
             CancelDHost(sender, e);
         }
-
 
         private void CancelDHost(object sender, RoutedEventArgs e)
         {

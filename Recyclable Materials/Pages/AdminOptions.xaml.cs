@@ -18,10 +18,10 @@ namespace Recyclable_Materials.Pages
 {
     public partial class AdminOptions : UserControl, IPage
     {
-
         public AdminOptions()
         {
-            InitializeComponent(); RefreshData();
+            InitializeComponent();
+            RefreshData();
         }
 
         public event EventHandler<IPage> ChangePage;
@@ -31,8 +31,15 @@ namespace Recyclable_Materials.Pages
 
         public void RefreshData()
         {
-            // TotalMembers.Text = $"{Database.LocalDatabase.GetTableCount(Database.LocalDatabase.MembersTable)}";
-            // TotalMaterials.Text = $"{Database.LocalDatabase.GetTableCount(Database.LocalDatabase.MaterialsTable)}";
+            TotalMembers.Text = $"{Database.LocalDatabase.GetTableCount(Database.LocalDatabase.MembersTable)}";
+            TotalMaterials.Text = $"{Database.LocalDatabase.GetTableCount(Database.LocalDatabase.MaterialsTable)}";
+            NotableMembers.Text = $"Notable Members: \r\n";
+            int i = 0;
+            foreach (var member in Database.LocalDatabase.SelectMembers())
+            {
+                NotableMembers.Text += $"{i + 1}:  {member.FirstName} {member.LastName} \r\n";
+                i++;
+            }
             // TotalEarned.Text = $"₱ {Database.LocalDatabase.GetTotalTransactions()}";
 
             // Get top 3 members.
@@ -55,8 +62,8 @@ namespace Recyclable_Materials.Pages
                 // top3id.Text = $"ID: {orderedMembers[2].ID}";
             }
             // Ignore any exception, that's probably an index error.
-            catch {
-            
+            catch
+            {
             }
         }
 
@@ -83,6 +90,16 @@ namespace Recyclable_Materials.Pages
                 ActivePage.Children.Add(page as UserControl);
             }
 
+            if (ActivePage.Children.Count >= 1)
+            {
+                CloseCurrentPage.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                
+                CloseCurrentPage.Visibility = Visibility.Collapsed;
+            }
+
         }
 
         private void RequestChangePage(object sender, IPage e)
@@ -102,5 +119,9 @@ namespace Recyclable_Materials.Pages
         private void OpenDashboard(object sender, MouseButtonEventArgs e) =>
             ChangeContentPage(null, e);
 
+        private void CloseCurrentActivePage(object sender, RoutedEventArgs e)
+        {
+            OpenDashboard(null, null);
+        }
     }
 }

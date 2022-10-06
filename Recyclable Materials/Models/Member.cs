@@ -26,7 +26,7 @@ namespace Recyclable_Materials.Models
                 x.Email.ToLower().Contains(query.ToLower()) ||
                 x.Address.ToLower().Contains(query.ToLower()) ||
                 $"{x.Points}".ToLower().Contains(query.ToLower()));
-
+        
 
       
     }

@@ -24,12 +24,12 @@
             </Grid>
             <Grid>
                 <StackPanel Margin="5" HorizontalAlignment="Right" Orientation="Horizontal" VerticalAlignment="Top">
-                    <materialDesign:PackIcon MouseLeftButtonDown="MinimizeClicked" Kind="WindowMinimize" Background="#00000000" Width="25" Height="25" Cursor="Hand" Foreground="White">
+                    <materialDesign:PackIcon MouseLeftButtonDown="MinimizeClicked" Kind="WindowMinimize" Background="#00000000" Width="25" Height="25" Cursor="Hand" Foreground="Black">
                         <materialDesign:PackIcon.Effect>
                             <DropShadowEffect ShadowDepth="0" Direction="0" BlurRadius="25" Opacity="0.5" RenderingBias="Quality"/>
                         </materialDesign:PackIcon.Effect>
                     </materialDesign:PackIcon>
-                    <materialDesign:PackIcon MouseLeftButtonDown="CloseClicked" Kind="Close" Background="#00000000" Width="25" Height="25" Cursor="Hand" Foreground="White">
+                    <materialDesign:PackIcon MouseLeftButtonDown="CloseClicked" Kind="Close" Background="#00000000" Width="25" Height="25" Cursor="Hand" Foreground="Black">
                         <materialDesign:PackIcon.Effect>
                             <DropShadowEffect ShadowDepth="0" Direction="0" BlurRadius="25" Opacity="0.5" RenderingBias="Quality"/>
                         </materialDesign:PackIcon.Effect>

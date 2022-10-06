@@ -1,58 +1,126 @@
-﻿    <UserControl x:Class="Recyclable_Materials.Pages.AdminOptions"
+﻿<UserControl x:Class="Recyclable_Materials.Pages.AdminOptions"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:local="clr-namespace:Recyclable_Materials.Pages"
-             mc:Ignorable="d" 
+             mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
         <DockPanel x:Name="TopControls" Background="white">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="0.5*"></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition Width="0.25*"></ColumnDefinition>
                     <ColumnDefinition></ColumnDefinition>
                 </Grid.ColumnDefinitions>
                 <StackPanel Background="#1A2A3A" TextElement.Foreground="White">
                     <StackPanel Margin="15" Orientation="Horizontal">
-                        <materialDesign:PackIcon Kind="DotsVertical" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="0,0,5,0"/>
-                        <TextBlock  FontSize="12" Opacity="0.75" VerticalAlignment="Center" Text="Pages"></TextBlock>
+                        <materialDesign:PackIcon Kind="DotsVertical" VerticalAlignment="Center"
+                                                 HorizontalAlignment="Stretch" Margin="0,0,5,0" />
+                        <TextBlock FontSize="12" Opacity="0.75" VerticalAlignment="Center" Text="Pages"></TextBlock>
                     </StackPanel>
                     <StackPanel Margin="15" Orientation="Vertical">
                         <StackPanel Margin="0,0,0,15" Orientation="Horizontal">
-                            <materialDesign:PackIcon Kind="Home" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="0,0,5,0"/>
+                            <materialDesign:PackIcon Kind="Home" VerticalAlignment="Center"
+                                                     HorizontalAlignment="Stretch" Margin="0,0,5,0" />
                             <TextBlock FontSize="14" VerticalAlignment="Center" Text="Dashboard" FontWeight="Bold"></TextBlock>
                         </StackPanel>
-                        <StackPanel Margin="0,0,0,15" Orientation="Horizontal">
-                            <materialDesign:PackIcon Kind="Account" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="0,0,5,0"/>
+                        <StackPanel MouseDown="OpenMembers" Margin="0,0,0,15" Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="Account" VerticalAlignment="Center"
+                                                     HorizontalAlignment="Stretch" Margin="0,0,5,0" />
                             <TextBlock FontSize="14" VerticalAlignment="Center" Text="Members" FontWeight="Bold"></TextBlock>
                         </StackPanel>
-                        <StackPanel Margin="0,0,0,15" Orientation="Horizontal">
-                            <materialDesign:PackIcon Kind="Cash" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="0,0,5,0"/>
+                        <StackPanel MouseDown="OpenTransactions" Margin="0,0,0,15" Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="Cash" VerticalAlignment="Center"
+                                                     HorizontalAlignment="Stretch" Margin="0,0,5,0" />
                             <TextBlock FontSize="14" VerticalAlignment="Center" Text="Transaction" FontWeight="Bold"></TextBlock>
                         </StackPanel>
-                        <StackPanel Margin="0,0,0,15" Orientation="Horizontal">
-                            <materialDesign:PackIcon Kind="Shape" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="0,0,5,0"/>
+                        <StackPanel MouseDown="OpenMaterials" Margin="0,0,0,15" Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="Shape" VerticalAlignment="Center"
+                                                     HorizontalAlignment="Stretch" Margin="0,0,5,0" />
                             <TextBlock FontSize="14" VerticalAlignment="Center" Text="Materials" FontWeight="Bold"></TextBlock>
                         </StackPanel>
-                        <StackPanel Margin="0,0,0,15" Orientation="Horizontal">
-                            <materialDesign:PackIcon Kind="History" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="0,0,5,0"/>
-                            <TextBlock FontSize="14" VerticalAlignment="Center" Text="History" FontWeight="Bold"></TextBlock>
-                        </StackPanel>
-                        <StackPanel Margin="0,0,0,15" Orientation="Horizontal">
-                            <materialDesign:PackIcon Kind="ShieldSword" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="0,0,5,0"/>
-                            <TextBlock FontSize="14" VerticalAlignment="Center" Text="Reports" FontWeight="Bold"></TextBlock>
-                        </StackPanel>
+                        <!-- <StackPanel MouseDown="" Margin="0,0,0,15" Orientation="Horizontal"> -->
+                        <!--     <materialDesign:PackIcon Kind="History" VerticalAlignment="Center" -->
+                        <!--                              HorizontalAlignment="Stretch" Margin="0,0,5,0" /> -->
+                        <!--     <TextBlock FontSize="14" VerticalAlignment="Center" Text="History" FontWeight="Bold"></TextBlock> -->
+                        <!-- </StackPanel> -->
+                        <!-- <StackPanel Margin="0,0,0,15" Orientation="Horizontal"> -->
+                        <!--     <materialDesign:PackIcon Kind="ShieldSword" VerticalAlignment="Center" -->
+                        <!--                              HorizontalAlignment="Stretch" Margin="0,0,5,0" /> -->
+                        <!--     <TextBlock FontSize="14" VerticalAlignment="Center" Text="Reports" FontWeight="Bold"></TextBlock> -->
+                        <!-- </StackPanel> -->
                     </StackPanel>
                 </StackPanel>
-                <StackPanel Grid.Column="1"></StackPanel>
-                <StackPanel Grid.Column="2"></StackPanel>
+                <StackPanel Grid.Column="1">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Margin="5" Height="30" Width="30" Kind="HouseCircleOutline"
+                                                 VerticalAlignment="Center">
+
+                        </materialDesign:PackIcon>
+                        <Label FontSize="24" VerticalAlignment="Center">Dashboard</Label>
+                    </StackPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Orientation="Horizontal" Background="#1DAF9A">
+                            <StackPanel Orientation="Vertical" Margin="10">
+                                <materialDesign:PackIcon Margin="5" Height="30" Width="30" Kind="Accounts"
+                                                         VerticalAlignment="Center" Foreground="White">
+
+                                </materialDesign:PackIcon>
+                            </StackPanel>
+                            <StackPanel TextElement.Foreground="White" Orientation="Vertical" Margin="10">
+                                <TextBlock FontSize="16" VerticalAlignment="Center">Total Members</TextBlock>
+                                <TextBlock Name="TotalMembers" FontSize="24" VerticalAlignment="Center">Total Members</TextBlock>
+                            </StackPanel>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" Background="#428BCB">
+                            <StackPanel Orientation="Vertical" Margin="10">
+                                <materialDesign:PackIcon Margin="5" Height="30" Width="30" Kind="Material"
+                                                         VerticalAlignment="Center" Foreground="White">
+
+                                </materialDesign:PackIcon>
+                            </StackPanel>
+                            <StackPanel TextElement.Foreground="White" Orientation="Vertical" Margin="10">
+                                <TextBlock FontSize="16" VerticalAlignment="Center">Total Materials</TextBlock>
+                                <TextBlock Name="TotalMaterials" FontSize="24" VerticalAlignment="Center">Total Materials</TextBlock>
+                            </StackPanel>
+                        </StackPanel>
+                    </Grid>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Margin="15">
+                            <TextBlock TextAlignment="Center" Text="Total Earned" FontSize="16" Margin="0,0,0,5">
+
+                            </TextBlock>
+                            <TextBlock Name="NotableMembers">
+
+                            </TextBlock>
+                        </StackPanel>
+                        <StackPanel Margin="15" Grid.Column="1">
+                            <TextBlock TextAlignment="Center" Text="Total Earned" FontSize="16">
+
+                            </TextBlock>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
             </Grid>
         </DockPanel>
-        <Grid x:Name="ActivePage" VerticalAlignment="Bottom" Height="380">
+        <Grid>
+            <Grid x:Name="ActivePage">
 
+            </Grid>
+            <Button Name="CloseCurrentPage" Click="CloseCurrentActivePage" Background="#DA534F" Foreground="White" Visibility="Hidden" BorderThickness="0" Content="Close" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="5">
+                
+            </Button>
         </Grid>
     </Grid>
 </UserControl>
